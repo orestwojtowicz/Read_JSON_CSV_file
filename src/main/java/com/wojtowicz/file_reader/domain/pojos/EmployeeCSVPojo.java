@@ -1,11 +1,11 @@
 package com.wojtowicz.file_reader.domain.pojos;
 
 
-import com.opencsv.bean.CsvBindByPosition;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 
 /**
  * @author Damian Wójtowicz
@@ -19,20 +19,15 @@ import lombok.ToString;
 @ToString
 public class EmployeeCSVPojo {
 
+    /**
+     * Plain Old Java Object - representing data schema for CSV file
+     */
 
-    @CsvBindByPosition(position = 0)
+
     private String id;
-    @CsvBindByPosition(position = 1)
     private String name;
-
-    @CsvBindByPosition(position = 2)
     private String surname;
-
-    @CsvBindByPosition(position = 3)
     private String job;
-
-    @CsvBindByPosition(position = 4)
     private String salary;
-
 
 }

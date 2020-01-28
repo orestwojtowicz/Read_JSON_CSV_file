@@ -7,10 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 
@@ -27,21 +24,15 @@ import javax.persistence.Id;
 @ToString
 public class EmployeeJsonEntity {
 
-
+    /**
+     * Entity class representing database model for JSON file
+     * */
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     private String surname;
-
     private String job;
-
     private double salary;
-
-
-
-
 }

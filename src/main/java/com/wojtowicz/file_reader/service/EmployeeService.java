@@ -1,13 +1,13 @@
 package com.wojtowicz.file_reader.service;
 
+import com.wojtowicz.file_reader.domain.entity.EmployeeCSVEntity;
 import com.wojtowicz.file_reader.domain.entity.EmployeeJsonEntity;
 import com.wojtowicz.file_reader.repository.EmployeeCSVRepository;
-import com.wojtowicz.file_reader.repository.EmployeeRepository;
+import com.wojtowicz.file_reader.repository.EmployeeJsonRepository;
 
 import org.springframework.stereotype.Service;
 
 
-import java.util.List;
 
 /**
  * @author Damian Wójtowicz
@@ -18,41 +18,50 @@ import java.util.List;
 @Service
 public class EmployeeService {
 
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeJsonRepository employeeRepository;
     private final EmployeeCSVRepository employeeCSVRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeCSVRepository employeeCSVRepository) {
+    public EmployeeService(EmployeeJsonRepository employeeRepository,
+                           EmployeeCSVRepository employeeCSVRepository) {
+
         this.employeeRepository = employeeRepository;
         this.employeeCSVRepository = employeeCSVRepository;
     }
 
-
-
     /**
-     * Method for finding employee entity based on jobName & calculate sum of earnings for given job
-     * We could also make query to database like this:
-     * @param jobName
+     * Method for finding employeeJson entity based on jobName & calculate sum of earnings for given job
+     * If we had more record use of EntityManager would be batter approach:
+     * EntityManager.createNativeQuery(String
+     * @param jobName Teacher, Priest, Janitor
+     * @return value with double precision
      * */
 
-    public double getSumOfEarningsFromJson(String jobName) {
-        List<EmployeeJsonEntity> findJobs = employeeRepository.findAllByJob(jobName);
-        double salary = 0;
-        for (EmployeeJsonEntity emp : findJobs) {
-            salary += emp.getSalary();
-        }
-       return salary;
+    public String getSumOfEarningsFromJson(String jobName) {
+
+      double sum =  employeeRepository.findAllByJob(jobName)
+              .stream()
+              .mapToDouble(EmployeeJsonEntity::getSalary)
+              .sum();
+
+        return String.format("%.2f",sum);
     }
 
+    /**
+     * Method for finding employeeCsv entity based on jobName & calculate sum of earnings for given job
+     * If we had more record use of EntityManager would be batter approach:
+     * EntityManager.createNativeQuery(String
+     * @param jobName Teacher, Priest, Janitor
+     * @return value with double precision
+     * */
+    public String getSumOfEarningsFromCsv(String jobName) {
 
-    public double getSumOfEarningsFromCsv(String jobName) {
-        return 0.0;
+    double sum =  employeeCSVRepository.findAllByJob(jobName)
+            .stream()
+            .mapToDouble(EmployeeCSVEntity::getSalary)
+            .sum();
+
+        return String.format("%.2f",sum);
     }
-
-
-
-
-
-
 }
 
 

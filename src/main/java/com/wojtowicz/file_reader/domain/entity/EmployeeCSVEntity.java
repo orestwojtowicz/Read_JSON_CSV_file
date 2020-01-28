@@ -1,7 +1,6 @@
 package com.wojtowicz.file_reader.domain.entity;
 
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 
 /**
  * @author Damian Wójtowicz
@@ -25,22 +25,15 @@ import javax.persistence.Id;
 @Entity
 public class EmployeeCSVEntity {
 
-
+    /**
+     * Entity class representing database model for CSV file
+     * */
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
-
     private String surname;
-
-
     private String job;
-
-
-    private String salary;
-
-
+    private double salary;
 }

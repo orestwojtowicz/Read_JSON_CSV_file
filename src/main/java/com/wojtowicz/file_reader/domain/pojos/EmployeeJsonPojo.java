@@ -1,7 +1,6 @@
 package com.wojtowicz.file_reader.domain.pojos;
 
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wojtowicz.file_reader.domain.entity.EmployeeJsonEntity;
 import lombok.AllArgsConstructor;
@@ -26,6 +25,9 @@ import java.util.List;
 public class EmployeeJsonPojo {
 
 
+    /**
+     * Plain Old Java Object - representing data schema for JSON file
+     */
 
 
     @JsonProperty("employees")
@@ -44,7 +46,5 @@ public class EmployeeJsonPojo {
 
     @JsonProperty("salaray")
     private double salary;
-
-
 
 }
