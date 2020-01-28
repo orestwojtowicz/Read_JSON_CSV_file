@@ -1,6 +1,6 @@
 package com.wojtowicz.file_reader.repository;
 
-import com.wojtowicz.file_reader.domain.Employee;
+import com.wojtowicz.file_reader.domain.entity.EmployeeJsonEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,8 +13,8 @@ import java.util.List;
  */
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaRepository<EmployeeJsonEntity, Long> {
 
-    List<Employee> findAllByJob(String job);
+    List<EmployeeJsonEntity> findAllByJob(String job);
 
 }

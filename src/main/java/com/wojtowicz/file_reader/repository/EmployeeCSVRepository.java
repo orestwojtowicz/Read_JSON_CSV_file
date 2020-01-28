@@ -1,7 +1,6 @@
 package com.wojtowicz.file_reader.repository;
 
-import com.wojtowicz.file_reader.domain.EmployeeCSVEntity;
-import org.hibernate.validator.internal.engine.resolver.JPATraversableResolver;
+import com.wojtowicz.file_reader.domain.entity.EmployeeCSVEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +12,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface EmployeeCSVRepo extends JpaRepository<EmployeeCSVEntity, Long> {
+public interface EmployeeCSVRepository extends JpaRepository<EmployeeCSVEntity, Long> {
+
+
 }

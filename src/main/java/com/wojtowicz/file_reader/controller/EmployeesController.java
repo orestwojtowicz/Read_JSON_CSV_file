@@ -2,8 +2,6 @@ package com.wojtowicz.file_reader.controller;
 
 import com.wojtowicz.file_reader.repository.EmployeeRepository;
 import com.wojtowicz.file_reader.service.EmployeeService;
-import com.wojtowicz.file_reader.domain.Employee;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,21 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeesController {
 
 
-    private EmployeeService employeeService;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
+    private final EmployeeRepository employeeRepository;
 
 
-    public EmployeesController(EmployeeService employeeService) {
+    public EmployeesController(EmployeeService employeeService, EmployeeRepository employeeRepository) {
         this.employeeService = employeeService;
+        this.employeeRepository = employeeRepository;
     }
 
 
-    @GetMapping("/{job}/salaries")
-    public double getSingleSalary(@PathVariable String job) {
-        return employeeService.getSumOfEarnings(job);
+    @GetMapping("v1/{job}/salaries/json")
+    public double getSingleSalaryFromJsonFile(@PathVariable String job) {
+        return employeeService.getSumOfEarningsFromJson(job);
 
+    }
+
+
+    @GetMapping("v2/{job}/salaries/csv")
+    public double getSingleSalaryFromCsvFile(@PathVariable String job) {
+        return 0.0;
     }
 
 
@@ -42,3 +45,11 @@ public class EmployeesController {
 
 
 }
+
+
+
+
+
+
+
+

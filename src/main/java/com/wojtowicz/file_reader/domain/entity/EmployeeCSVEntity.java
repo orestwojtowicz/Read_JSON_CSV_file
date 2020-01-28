@@ -1,4 +1,4 @@
-package com.wojtowicz.file_reader.domain;
+package com.wojtowicz.file_reader.domain.entity;
 
 
 
@@ -12,8 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
-
 /**
  * @author Damian Wójtowicz
  * @project file_reader
@@ -22,26 +20,27 @@ import javax.persistence.Id;
 
 @Data
 @AllArgsConstructor
-@Entity
 @NoArgsConstructor
 @ToString
-public class Employee  {
+@Entity
+public class EmployeeCSVEntity {
 
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
+
     private String surname;
+
 
     private String job;
 
-    private double salary;
 
-
+    private String salary;
 
 
 }

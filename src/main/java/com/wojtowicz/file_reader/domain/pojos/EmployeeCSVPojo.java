@@ -1,4 +1,4 @@
-package com.wojtowicz.file_reader.domain;
+package com.wojtowicz.file_reader.domain.pojos;
 
 
 import com.opencsv.bean.CsvBindByPosition;
@@ -17,7 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class EmployeeCSV {
+public class EmployeeCSVPojo {
 
 
     @CsvBindByPosition(position = 0)

@@ -1,8 +1,9 @@
-package com.wojtowicz.file_reader.domain;
+package com.wojtowicz.file_reader.domain.pojos;
 
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wojtowicz.file_reader.domain.entity.EmployeeJsonEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,13 +23,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class EmployeePOJO {
+public class EmployeeJsonPojo {
 
 
 
 
     @JsonProperty("employees")
-    private List<Employee> employees;
+    private List<EmployeeJsonEntity> employees;
 
     @JsonProperty("id")
     private Long id;

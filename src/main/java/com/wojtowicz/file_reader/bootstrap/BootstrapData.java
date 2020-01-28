@@ -1,35 +1,24 @@
 package com.wojtowicz.file_reader.bootstrap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.enums.CSVReaderNullFieldIndicator;
-import com.wojtowicz.file_reader.domain.Employee;
-import com.wojtowicz.file_reader.domain.EmployeeCSV;
-import com.wojtowicz.file_reader.domain.EmployeeCSVEntity;
-import com.wojtowicz.file_reader.domain.EmployeePOJO;
-import com.wojtowicz.file_reader.repository.EmployeeCSVRepo;
+import com.wojtowicz.file_reader.domain.entity.EmployeeJsonEntity;
+import com.wojtowicz.file_reader.domain.pojos.EmployeeCSVPojo;
+import com.wojtowicz.file_reader.domain.entity.EmployeeCSVEntity;
+import com.wojtowicz.file_reader.domain.pojos.EmployeeJsonPojo;
+import com.wojtowicz.file_reader.repository.EmployeeCSVRepository;
 import com.wojtowicz.file_reader.repository.EmployeeRepository;
-import org.hibernate.bytecode.enhance.internal.javassist.PersistentAttributesHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -39,21 +28,20 @@ import java.util.List;
  * @date 28.01.20
  */
 
+@Slf4j
 @Component
 public class BootstrapData implements CommandLineRunner {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final EmployeeRepository employeeRepository;
+    private final EmployeeCSVRepository employeeCSVRepository;
 
-    @Autowired
-    EmployeeCSVRepo repo;
 
-    public BootstrapData(EmployeeRepository employeeRepository) {
+
+    public BootstrapData(EmployeeRepository employeeRepository, EmployeeCSVRepository employeeCSVRepository) {
         this.employeeRepository = employeeRepository;
+        this.employeeCSVRepository = employeeCSVRepository;
     }
-
-
-
 
 
     private static final String PATH = "/home/damiass/Desktop/file_reader/src/main/resources/files/employees.csv";
@@ -62,57 +50,51 @@ public class BootstrapData implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         readEmployeePojoAndSaveItToDatabase();
+        readEmployeeFromCSVFileAndSaveItToDatabase();
 
-        Reader reader = Files.newBufferedReader(Paths.get(PATH));
 
-        CsvToBean csvToBean = new CsvToBeanBuilder(reader)
-                .withType(EmployeeCSV.class)
-                .withIgnoreLeadingWhiteSpace(true)
-                .withSkipLines(0)
-                .build();
+    }
 
-        List<EmployeeCSV> empls = csvToBean.parse();
+
+    private void readEmployeeFromCSVFileAndSaveItToDatabase() {
 
         ModelMapper mapper = new ModelMapper();
 
+        try (Reader reader = Files.newBufferedReader(Paths.get(PATH))) {
+            CsvToBean csvToBean = new CsvToBeanBuilder(reader)
+                    .withType(EmployeeCSVPojo.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withSkipLines(0)
+                    .build();
 
+            List<EmployeeCSVPojo> empls = csvToBean.parse();
 
-        for (EmployeeCSV em : empls) {
-            if (em.getId().equals("id")) {
-                continue;
+            for (EmployeeCSVPojo em : empls) {
+                if (em.getId().equals("id")) {
+                    continue;
+                }
+                EmployeeCSVEntity employeeCSVEntity = new EmployeeCSVEntity();
+                employeeCSVEntity = mapper.map(em, EmployeeCSVEntity.class);
+                employeeCSVRepository.save(employeeCSVEntity);
+                log.info("CSV file has been saved successfully to database");
             }
-            EmployeeCSVEntity employeeCSVEntity = new EmployeeCSVEntity();
-            employeeCSVEntity = mapper.map(em,EmployeeCSVEntity.class);
-            repo.save(employeeCSVEntity);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 
-
-
-
-
-
-
-       // empls.forEach(x -> System.out.println(x.getId()));
-
-
-        reader.close();
-
-
-
-
-        }
-
-
+    }
 
     private void readEmployeePojoAndSaveItToDatabase() throws Exception {
-        EmployeePOJO employees = (objectMapper
+        EmployeeJsonPojo employees = (objectMapper
                 .readValue(new File(
-                        "/home/damiass/Desktop/file_reader/src/main/resources/static/employees.json"), EmployeePOJO.class));
+                        "/home/damiass/Desktop/file_reader/src/main/resources/static/employees.json"), EmployeeJsonPojo.class));
 
-        for (Employee pojo : employees.getEmployees()) {
+        for (EmployeeJsonEntity pojo : employees.getEmployees()) {
              employeeRepository.save(pojo);
         }
+        log.info("JSON file has been saved successfully to database");
     }
 
 
