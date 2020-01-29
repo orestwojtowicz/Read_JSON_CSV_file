@@ -53,8 +53,8 @@ public class EmployeeService extends ReadJsonAndCsvFiles {
     /**
      * Method for finding employeeJson entity based on jobName & calculate sum of earnings for given job
      * If we had more record use of EntityManager would be batter approach:
-     * SUM(salary) FROM Employee WHERE job = :job.createNativeQuery()
-     * double sum = getSingleResult()
+     * SUM(salary) FROM Employee WHERE job = :job.createNativeQuery()...
+     *  getSingleResult() - get sum from value
      *
      * @param jobName Teacher, Priest, Janitor
      * @return value with double precision
