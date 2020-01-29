@@ -7,6 +7,7 @@ import com.wojtowicz.file_reader.repository.EmployeeJsonRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 
 
 /**
@@ -16,29 +17,43 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class EmployeeService {
+public class EmployeeService extends ReadJsonAndCsvFiles {
 
-    private final EmployeeJsonRepository employeeRepository;
+    private final EmployeeJsonRepository employeeJSONRepository;
     private final EmployeeCSVRepository employeeCSVRepository;
 
-    public EmployeeService(EmployeeJsonRepository employeeRepository,
-                           EmployeeCSVRepository employeeCSVRepository) {
 
-        this.employeeRepository = employeeRepository;
+    public EmployeeService(EmployeeJsonRepository employeeJSONRepository,
+                           EmployeeCSVRepository employeeCSVRepository) {
+        super(employeeCSVRepository, employeeJSONRepository);
+
+        this.employeeJSONRepository = employeeJSONRepository;
         this.employeeCSVRepository = employeeCSVRepository;
     }
+
+
+
+    public void readCSVFile(String csvFilePath) {
+        readEmployeePojoFromCSVFileAndSaveItToDatabase(csvFilePath);
+    }
+
+    public void readJSONFile(String jsonFilePath) throws IOException {
+        readEmployeePojoFromJSONFileAndSaveItToDatabase(jsonFilePath);
+    }
+
 
     /**
      * Method for finding employeeJson entity based on jobName & calculate sum of earnings for given job
      * If we had more record use of EntityManager would be batter approach:
-     * EntityManager.createNativeQuery(String
+     * SUM(salary) FROM Employee WHERE job = :job.createNativeQuery()
+     * double sum = getSingleResult()
      * @param jobName Teacher, Priest, Janitor
      * @return value with double precision
      * */
 
     public String getSumOfEarningsFromJson(String jobName) {
 
-      double sum =  employeeRepository.findAllByJob(jobName)
+      double sum =  employeeJSONRepository.findAllByJob(jobName)
               .stream()
               .mapToDouble(EmployeeJsonEntity::getSalary)
               .sum();
