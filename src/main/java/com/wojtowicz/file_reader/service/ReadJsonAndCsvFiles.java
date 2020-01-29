@@ -35,7 +35,9 @@ public abstract class ReadJsonAndCsvFiles {
     private final EmployeeJsonRepository employeeJSONRepository;
     private final EmployeeCSVRepository employeeCSVRepository;
 
-    public ReadJsonAndCsvFiles(EmployeeCSVRepository employeeCSVRepository, EmployeeJsonRepository employeeJSONRepository) {
+    public ReadJsonAndCsvFiles(EmployeeCSVRepository employeeCSVRepository,
+                               EmployeeJsonRepository employeeJSONRepository) {
+
         this.employeeCSVRepository = employeeCSVRepository;
         this.employeeJSONRepository = employeeJSONRepository;
     }

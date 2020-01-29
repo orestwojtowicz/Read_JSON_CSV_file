@@ -3,11 +3,9 @@ package com.wojtowicz.file_reader.controller;
 
 import com.wojtowicz.file_reader.service.EmployeeService;
 import com.wojtowicz.file_reader.shared.AppConstants;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -22,6 +20,7 @@ public class EmployeesController {
 
 
     /**
+     * MAIN_ENDPOINT - /employees
      * Swagger available at: http://localhost:8080/swagger-ui.html#/
      * */
 
@@ -39,7 +38,8 @@ public class EmployeesController {
      * "http://localhost:8080/employeesv1/v1/{job}/salaries/json"
      * @param job might be Teacher, Priest, Janitor
      * */
-    @GetMapping(AppConstants.GET_SINGLE_SALARY_JSON_ENDPOINT)
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("v1/{job}/salaries/json")
     public String getSingleSalaryFromJsonFile(@PathVariable String job) {
 
         return "json file - sum salary for job "
@@ -52,7 +52,8 @@ public class EmployeesController {
      * http://localhost:8080/employees/v2/Janitor/salaries/csv
      * @param job might be Teacher, Priest, Janitor
      * */
-    @GetMapping(AppConstants.GET_SINGLE_SALARY_CSV_ENDPOINT)
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("v2/{job}/salaries/csv")
     public String getSingleSalaryFromCsvFile(@PathVariable String job) {
 
         return "csv file - sum salary for job "
