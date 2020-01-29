@@ -25,5 +25,7 @@ public interface EmployeeJsonRepository extends JpaRepository<EmployeeJsonEntity
      * */
     List<EmployeeJsonEntity> findAllByJob(String job);
 
+    String findByJob(String jobName);
+
 
 }

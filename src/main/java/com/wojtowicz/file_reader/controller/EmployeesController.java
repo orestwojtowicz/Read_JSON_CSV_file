@@ -3,6 +3,7 @@ package com.wojtowicz.file_reader.controller;
 
 import com.wojtowicz.file_reader.service.EmployeeService;
 import com.wojtowicz.file_reader.shared.AppConstants;
+import javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class EmployeesController {
      * */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("v1/{job}/salaries/json")
-    public String getSingleSalaryFromJsonFile(@PathVariable String job) {
+    public String getSingleSalaryFromJsonFile(@PathVariable String job) throws NotFoundException {
 
         return "json file - sum salary for job "
                 + job + " = " + employeeService.getSumOfEarningsFromJson(job);
@@ -54,7 +55,7 @@ public class EmployeesController {
      * */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("v2/{job}/salaries/csv")
-    public String getSingleSalaryFromCsvFile(@PathVariable String job) {
+    public String getSingleSalaryFromCsvFile(@PathVariable String job) throws NotFoundException {
 
         return "csv file - sum salary for job "
                 + job + " = " + employeeService.getSumOfEarningsFromCsv(job);

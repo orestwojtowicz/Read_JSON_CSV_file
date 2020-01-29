@@ -5,9 +5,12 @@ import com.wojtowicz.file_reader.domain.entity.EmployeeJsonEntity;
 import com.wojtowicz.file_reader.repository.EmployeeCSVRepository;
 import com.wojtowicz.file_reader.repository.EmployeeJsonRepository;
 
+import javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -32,12 +35,17 @@ public class EmployeeService extends ReadJsonAndCsvFiles {
     }
 
 
-
-    public void readCSVFile(String csvFilePath) {
+    public void readCSVFile(String csvFilePath) throws FileNotFoundException {
+        if (csvFilePath == null) {
+            throw new FileNotFoundException("File path for csv file can't be found");
+        }
         readEmployeePojoFromCSVFileAndSaveItToDatabase(csvFilePath);
     }
 
     public void readJSONFile(String jsonFilePath) throws IOException {
+        if (jsonFilePath == null) {
+            throw new FileNotFoundException("File path for JSON file can't be found");
+        }
         readEmployeePojoFromJSONFileAndSaveItToDatabase(jsonFilePath);
     }
 
@@ -47,35 +55,51 @@ public class EmployeeService extends ReadJsonAndCsvFiles {
      * If we had more record use of EntityManager would be batter approach:
      * SUM(salary) FROM Employee WHERE job = :job.createNativeQuery()
      * double sum = getSingleResult()
+     *
      * @param jobName Teacher, Priest, Janitor
      * @return value with double precision
-     * */
+     */
 
-    public String getSumOfEarningsFromJson(String jobName) {
+    public String getSumOfEarningsFromJson(String jobName) throws NotFoundException {
 
-      double sum =  employeeJSONRepository.findAllByJob(jobName)
-              .stream()
-              .mapToDouble(EmployeeJsonEntity::getSalary)
-              .sum();
+        List<EmployeeJsonEntity> listJobs = employeeJSONRepository.findAllByJob(jobName);
 
-        return String.format("%.2f",sum);
+        if (listJobs.isEmpty()) {
+            throw new NotFoundException("there is no record for given job " + jobName);
+        }
+
+        double sum =
+                listJobs
+                        .stream()
+                        .mapToDouble(EmployeeJsonEntity::getSalary)
+                        .sum();
+
+        return String.format("%.2f", sum);
     }
 
     /**
      * Method for finding employeeCsv entity based on jobName & calculate sum of earnings for given job
      * If we had more record use of EntityManager would be batter approach:
      * EntityManager.createNativeQuery(String
+     *
      * @param jobName Teacher, Priest, Janitor
      * @return value with double precision
-     * */
-    public String getSumOfEarningsFromCsv(String jobName) {
+     */
+    public String getSumOfEarningsFromCsv(String jobName) throws NotFoundException {
 
-    double sum =  employeeCSVRepository.findAllByJob(jobName)
-            .stream()
-            .mapToDouble(EmployeeCSVEntity::getSalary)
-            .sum();
+        List<EmployeeCSVEntity> listJobs = employeeCSVRepository.findAllByJob(jobName);
 
-        return String.format("%.2f",sum);
+        if (listJobs.isEmpty()) {
+            throw new NotFoundException("there is no record for given job " + jobName);
+        }
+
+        double sum =
+                listJobs
+                        .stream()
+                        .mapToDouble(EmployeeCSVEntity::getSalary)
+                        .sum();
+
+        return String.format("%.2f", sum);
     }
 }
 
